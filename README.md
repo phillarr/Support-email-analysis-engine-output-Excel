@@ -109,3 +109,7 @@ The data must be in an Excel **table**, not just a range of cells: the module ad
 - **Email contents are sent to Mistral AI** for processing. Only use this with mailboxes whose data you are allowed to share with a third-party AI provider.
 - **API keys and OAuth tokens stay in your Make connections** and are never exported in the blueprint.
 - **Emails are untrusted input.** Someone could write an email designed to trick the AI (prompt injection) and fill the table with misleading data.
+
+## License
+
+[MIT](LICENSE)
