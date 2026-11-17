@@ -1,0 +1,1155 @@
+{
+    "name": "Support email analysis engine output EXCEL",
+    "flow": [
+        {
+            "id": 1,
+            "module": "google-email:triggerWatchNewEmails",
+            "version": 4,
+            "parameters": {
+                "from": "",
+                "size": {
+                    "unit": "M",
+                    "amount": null,
+                    "criteria": "larger"
+                },
+                "limit": 10,
+                "folder": "INBOX",
+                "format": "full",
+                "subject": "",
+                "criteria": "all",
+                "labelIds": "",
+                "markSeen": false,
+                "filterType": "simpleSearch",
+                "__IMTCONN__": null,
+                "excludeWords": "",
+                "includeWords": "",
+                "hasAttachment": false
+            },
+            "mapper": {},
+            "metadata": {
+                "designer": {
+                    "x": 0,
+                    "y": 0
+                },
+                "restore": {
+                    "parameters": {
+                        "size": {
+                            "nested": {
+                                "unit": {
+                                    "label": "MB (megabytes)"
+                                },
+                                "criteria": {
+                                    "label": "Greater than"
+                                }
+                            }
+                        },
+                        "folder": {
+                            "label": "Inbox"
+                        },
+                        "format": {
+                            "label": "Full content"
+                        },
+                        "criteria": {
+                            "label": "All messages"
+                        },
+                        "filterType": {
+                            "label": "Simple filter"
+                        },
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "google-email"
+                            },
+                            "label": "My Gmail connection"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:google-email",
+                        "label": "Connection",
+                        "required": true
+                    },
+                    {
+                        "name": "filterType",
+                        "type": "select",
+                        "label": "Filter type",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "simpleSearch",
+                                "gmailSearch"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "format",
+                        "type": "select",
+                        "label": "Content format",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "full",
+                                "raw",
+                                "metadata",
+                                "minimal"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "folder",
+                        "type": "select",
+                        "label": "Folder",
+                        "required": true
+                    },
+                    {
+                        "name": "labelIds",
+                        "type": "select",
+                        "label": "Label"
+                    },
+                    {
+                        "name": "criteria",
+                        "type": "select",
+                        "label": "Criteria",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "all",
+                                "is:read",
+                                "is:unread"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "markSeen",
+                        "type": "boolean",
+                        "label": "Mark email message(s) as read when fetched"
+                    },
+                    {
+                        "name": "limit",
+                        "type": "uinteger",
+                        "label": "Limit",
+                        "required": true,
+                        "validate": {
+                            "max": 500
+                        }
+                    },
+                    {
+                        "name": "from",
+                        "type": "email",
+                        "label": "Sender email address"
+                    },
+                    {
+                        "name": "subject",
+                        "type": "text",
+                        "label": "Subject"
+                    },
+                    {
+                        "name": "includeWords",
+                        "type": "text",
+                        "label": "Has the words"
+                    },
+                    {
+                        "name": "excludeWords",
+                        "type": "text",
+                        "label": "Doesn't have"
+                    },
+                    {
+                        "name": "size",
+                        "spec": [
+                            {
+                                "name": "criteria",
+                                "type": "select",
+                                "label": "Criteria",
+                                "validate": {
+                                    "enum": [
+                                        "larger",
+                                        "smaller"
+                                    ]
+                                }
+                            },
+                            {
+                                "name": "amount",
+                                "type": "integer",
+                                "label": "Size",
+                                "validate": {
+                                    "min": 0
+                                }
+                            },
+                            {
+                                "name": "unit",
+                                "type": "select",
+                                "label": "Size unit",
+                                "validate": {
+                                    "enum": [
+                                        "M",
+                                        "K",
+                                        "bytes"
+                                    ]
+                                }
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Email size"
+                    },
+                    {
+                        "name": "hasAttachment",
+                        "type": "boolean",
+                        "label": "Only emails with attachments/media",
+                        "required": true
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "id",
+                        "type": "text",
+                        "label": "Message ID"
+                    },
+                    {
+                        "name": "threadId",
+                        "type": "text",
+                        "label": "Thread ID"
+                    },
+                    {
+                        "name": "internalDate",
+                        "type": "date",
+                        "label": "Date"
+                    },
+                    {
+                        "name": "subject",
+                        "type": "text",
+                        "label": "Subject",
+                        "condition": true
+                    },
+                    {
+                        "name": "fromName",
+                        "type": "text",
+                        "label": "From (name)",
+                        "condition": true
+                    },
+                    {
+                        "name": "fromEmail",
+                        "type": "text",
+                        "label": "From (email)",
+                        "condition": true
+                    },
+                    {
+                        "name": "to",
+                        "spec": {
+                            "spec": [
+                                {
+                                    "name": "name",
+                                    "type": "text",
+                                    "label": "Name"
+                                },
+                                {
+                                    "name": "email",
+                                    "type": "text",
+                                    "label": "Email"
+                                }
+                            ],
+                            "type": "collection"
+                        },
+                        "type": "array",
+                        "label": "To",
+                        "condition": true
+                    },
+                    {
+                        "name": "cc",
+                        "spec": [
+                            {
+                                "name": "email",
+                                "type": "email",
+                                "label": "Email"
+                            },
+                            {
+                                "name": "name",
+                                "type": "text",
+                                "label": "Name"
+                            }
+                        ],
+                        "type": "array",
+                        "label": "CC",
+                        "condition": true
+                    },
+                    {
+                        "name": "bcc",
+                        "spec": [
+                            {
+                                "name": "email",
+                                "type": "email",
+                                "label": "Email"
+                            },
+                            {
+                                "name": "name",
+                                "type": "text",
+                                "label": "Name"
+                            }
+                        ],
+                        "type": "array",
+                        "label": "BCC",
+                        "condition": true
+                    },
+                    {
+                        "name": "snippet",
+                        "type": "text",
+                        "label": "Snippet"
+                    },
+                    {
+                        "name": "fullTextBody",
+                        "type": "text",
+                        "label": "Full text body",
+                        "condition": true
+                    },
+                    {
+                        "name": "htmlBody",
+                        "type": "text",
+                        "label": "HTML body",
+                        "condition": true
+                    },
+                    {
+                        "name": "hasAttachment",
+                        "type": "boolean",
+                        "label": "Has attachment",
+                        "condition": true
+                    },
+                    {
+                        "name": "hasMedia",
+                        "type": "boolean",
+                        "label": "Has media",
+                        "condition": true
+                    },
+                    {
+                        "name": "sysFolders",
+                        "spec": [
+                            {
+                                "name": "id",
+                                "type": "text",
+                                "label": "System folder ID"
+                            },
+                            {
+                                "name": "name",
+                                "type": "text",
+                                "label": "System folder name"
+                            }
+                        ],
+                        "type": "array",
+                        "label": "System folders"
+                    },
+                    {
+                        "name": "categoryFolders",
+                        "spec": [
+                            {
+                                "name": "id",
+                                "type": "text",
+                                "label": "Category folder ID"
+                            },
+                            {
+                                "name": "name",
+                                "type": "text",
+                                "label": "Category folder name"
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Category folders"
+                    },
+                    {
+                        "name": "userLabelFolders",
+                        "spec": [
+                            {
+                                "name": "id",
+                                "type": "text",
+                                "label": "User label folder ID"
+                            },
+                            {
+                                "name": "name",
+                                "type": "text",
+                                "label": "User label folder name"
+                            }
+                        ],
+                        "type": "array",
+                        "label": "User label folders"
+                    },
+                    {
+                        "name": "labelIds",
+                        "spec": {
+                            "type": "text"
+                        },
+                        "type": "array",
+                        "label": "Message folder IDs"
+                    },
+                    {
+                        "name": "headers",
+                        "spec": [
+                            {
+                                "name": "Delivered-To",
+                                "type": "text",
+                                "label": "Delivered-To"
+                            },
+                            {
+                                "name": "Received",
+                                "type": "text",
+                                "label": "Received"
+                            },
+                            {
+                                "name": "Date",
+                                "type": "text",
+                                "label": "Date (header)"
+                            },
+                            {
+                                "name": "X-Original-Sender",
+                                "type": "text"
+                            },
+                            {
+                                "name": "Reply-To",
+                                "type": "text"
+                            },
+                            {
+                                "name": "Subject",
+                                "type": "text",
+                                "label": "Subject"
+                            },
+                            {
+                                "name": "From",
+                                "type": "text",
+                                "label": "From"
+                            },
+                            {
+                                "name": "To",
+                                "type": "text",
+                                "label": "To"
+                            },
+                            {
+                                "name": "Message-ID",
+                                "type": "text",
+                                "label": "Message-ID"
+                            },
+                            {
+                                "name": "In-Reply-To",
+                                "type": "text",
+                                "label": "In-Reply-To"
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Headers",
+                        "condition": true
+                    },
+                    {
+                        "name": "sizeEstimate",
+                        "type": "number",
+                        "label": "Size estimate"
+                    },
+                    {
+                        "name": "historyId",
+                        "type": "text",
+                        "label": "History ID"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 2,
+            "module": "mistral-ai:makeAnApiCall",
+            "version": 1,
+            "parameters": {
+                "__IMTCONN__": null
+            },
+            "mapper": {
+                "url": "/v1/agents/completions",
+                "body": "{\r\n  \"agent_id\": \"YOUR_MISTRAL_AGENT_ID\",\r\n  \"messages\": [\r\n    {\r\n      \"role\": \"user\",\r\n      \"content\": \"{{1.subject}}\\n\\n{{1.textPlain}}\"\r\n    }\r\n  ]\r\n}",
+                "method": "POST",
+                "headers": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ]
+            },
+            "metadata": {
+                "designer": {
+                    "x": 300,
+                    "y": 0
+                },
+                "setupValidation": {
+                    "result": {
+                        "valid": true,
+                        "fields": []
+                    },
+                    "version": 1,
+                    "configuration": "4749d1d6ae9cf25e"
+                },
+                "restore": {
+                    "expect": {
+                        "qs": {
+                            "mode": "chose"
+                        },
+                        "method": {
+                            "mode": "chose",
+                            "label": "POST"
+                        },
+                        "headers": {
+                            "mode": "chose",
+                            "items": [
+                                null
+                            ]
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "mistral-ai"
+                            },
+                            "label": "My Mistral connection"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:mistral-ai",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "url",
+                        "type": "text",
+                        "label": "URL",
+                        "required": true
+                    },
+                    {
+                        "name": "method",
+                        "type": "select",
+                        "label": "Method",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "GET",
+                                "POST",
+                                "PUT",
+                                "PATCH",
+                                "DELETE"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "headers",
+                        "spec": [
+                            {
+                                "name": "key",
+                                "type": "text",
+                                "label": "Key"
+                            },
+                            {
+                                "name": "value",
+                                "type": "text",
+                                "label": "Value"
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Headers"
+                    },
+                    {
+                        "name": "qs",
+                        "spec": [
+                            {
+                                "name": "key",
+                                "type": "text",
+                                "label": "Key"
+                            },
+                            {
+                                "name": "value",
+                                "type": "text",
+                                "label": "Value"
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Query String"
+                    },
+                    {
+                        "name": "body",
+                        "type": "any",
+                        "label": "Body"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 9,
+            "module": "json:ParseJSON",
+            "version": 1,
+            "parameters": {
+                "type": ""
+            },
+            "filter": null,
+            "mapper": {
+                "json": "{{replace(replace(2.body.choices[1].message.content; \"```json\"; ); \"```\"; )}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 656,
+                    "y": -13
+                },
+                "restore": {
+                    "parameters": {
+                        "type": {
+                            "label": "My data structure"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "type",
+                        "type": "udt",
+                        "label": "Data structure"
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "json",
+                        "type": "text",
+                        "label": "JSON string",
+                        "required": true
+                    }
+                ],
+                "interface": [
+                    {
+                        "help": "",
+                        "name": "type",
+                        "type": "text",
+                        "label": "Type",
+                        "default": null,
+                        "required": false,
+                        "multiline": false
+                    },
+                    {
+                        "help": "",
+                        "name": "properties",
+                        "spec": [
+                            {
+                                "help": "",
+                                "name": "CustomerName",
+                                "spec": [
+                                    {
+                                        "help": "",
+                                        "name": "type",
+                                        "spec": {
+                                            "type": "text",
+                                            "default": null,
+                                            "required": false,
+                                            "multiline": false
+                                        },
+                                        "type": "array",
+                                        "label": "Type",
+                                        "required": false
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "Customer name",
+                                "required": false
+                            },
+                            {
+                                "help": "",
+                                "name": "OrderNumber",
+                                "spec": [
+                                    {
+                                        "help": "",
+                                        "name": "type",
+                                        "spec": {
+                                            "type": "text",
+                                            "default": null,
+                                            "required": false,
+                                            "multiline": false
+                                        },
+                                        "type": "array",
+                                        "label": "Type",
+                                        "required": false
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "Order number",
+                                "required": false
+                            },
+                            {
+                                "help": "",
+                                "name": "TrackingNumber",
+                                "spec": [
+                                    {
+                                        "help": "",
+                                        "name": "type",
+                                        "spec": {
+                                            "type": "text",
+                                            "default": null,
+                                            "required": false,
+                                            "multiline": false
+                                        },
+                                        "type": "array",
+                                        "label": "Type",
+                                        "required": false
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "Tracking number",
+                                "required": false
+                            },
+                            {
+                                "help": "",
+                                "name": "IssueType",
+                                "spec": [
+                                    {
+                                        "help": "",
+                                        "name": "type",
+                                        "spec": {
+                                            "type": "text",
+                                            "default": null,
+                                            "required": false,
+                                            "multiline": false
+                                        },
+                                        "type": "array",
+                                        "label": "Type",
+                                        "required": false
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "Issue type",
+                                "required": false
+                            },
+                            {
+                                "help": "",
+                                "name": "RequestedAction",
+                                "spec": [
+                                    {
+                                        "help": "",
+                                        "name": "type",
+                                        "spec": {
+                                            "type": "text",
+                                            "default": null,
+                                            "required": false,
+                                            "multiline": false
+                                        },
+                                        "type": "array",
+                                        "label": "Type",
+                                        "required": false
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "Requested action",
+                                "required": false
+                            },
+                            {
+                                "help": "",
+                                "name": "UrgencyLevel",
+                                "spec": [
+                                    {
+                                        "help": "",
+                                        "name": "type",
+                                        "spec": {
+                                            "type": "text",
+                                            "default": null,
+                                            "required": false,
+                                            "multiline": false
+                                        },
+                                        "type": "array",
+                                        "label": "Type",
+                                        "required": false
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "Urgency level",
+                                "required": false
+                            },
+                            {
+                                "help": "",
+                                "name": "CustomerSince",
+                                "spec": [
+                                    {
+                                        "help": "",
+                                        "name": "type",
+                                        "spec": {
+                                            "type": "text",
+                                            "default": null,
+                                            "required": false,
+                                            "multiline": false
+                                        },
+                                        "type": "array",
+                                        "label": "Type",
+                                        "required": false
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "Customer since",
+                                "required": false
+                            },
+                            {
+                                "help": "",
+                                "name": "ProductMentioned",
+                                "spec": [
+                                    {
+                                        "help": "",
+                                        "name": "type",
+                                        "spec": {
+                                            "type": "text",
+                                            "default": null,
+                                            "required": false,
+                                            "multiline": false
+                                        },
+                                        "type": "array",
+                                        "label": "Type",
+                                        "required": false
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "Product mentioned",
+                                "required": false
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Properties",
+                        "required": false
+                    }
+                ]
+            }
+        },
+        {
+            "id": 7,
+            "module": "microsoft-excel:addATableRow",
+            "version": 2,
+            "parameters": {
+                "__IMTCONN__": null
+            },
+            "mapper": {
+                "row": {
+                    "0": "{{now}}",
+                    "1": "{{9.CustomerName}}",
+                    "2": "{{9.OrderNumber}}",
+                    "3": "{{9.TrackingNumber}}",
+                    "4": "{{9.IssueType}}",
+                    "5": "{{9.RequestedAction}}",
+                    "6": "{{9.UrgencyLevel}}",
+                    "7": "{{9.CustomerSince}}",
+                    "8": "{{9.ProductMentioned}}"
+                },
+                "table": "Table1",
+                "select": "list",
+                "selectB": "my",
+                "workbook": "/Documents/Customer service.xlsx",
+                "worksheet": "Table1"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 998,
+                    "y": -24
+                },
+                "restore": {
+                    "expect": {
+                        "table": {
+                            "mode": "edit",
+                            "nested": [
+                                {
+                                    "help": "You have to fill at least one column in the row.",
+                                    "name": "row",
+                                    "spec": [
+                                        {
+                                            "name": "0",
+                                            "type": "text",
+                                            "label": "Timestamp"
+                                        },
+                                        {
+                                            "name": "1",
+                                            "type": "text",
+                                            "label": "CustomerName"
+                                        },
+                                        {
+                                            "name": "2",
+                                            "type": "text",
+                                            "label": "OrderNumber"
+                                        },
+                                        {
+                                            "name": "3",
+                                            "type": "text",
+                                            "label": "TrackingNumber"
+                                        },
+                                        {
+                                            "name": "4",
+                                            "type": "text",
+                                            "label": "IssueType"
+                                        },
+                                        {
+                                            "name": "5",
+                                            "type": "text",
+                                            "label": "RequestedAction"
+                                        },
+                                        {
+                                            "name": "6",
+                                            "type": "text",
+                                            "label": "UrgencyLevel"
+                                        },
+                                        {
+                                            "name": "7",
+                                            "type": "text",
+                                            "label": "CustomerSince"
+                                        },
+                                        {
+                                            "name": "8",
+                                            "type": "text",
+                                            "label": "ProductMentioned"
+                                        }
+                                    ],
+                                    "type": "collection",
+                                    "label": "Row",
+                                    "required": "true"
+                                },
+                                {
+                                    "help": "To insert a row at a specific position in a table, specify the row number.",
+                                    "name": "id",
+                                    "type": "uinteger",
+                                    "label": "Row ID"
+                                }
+                            ]
+                        },
+                        "select": {
+                            "label": "Select from the list"
+                        },
+                        "selectB": {
+                            "label": "My Drive"
+                        },
+                        "worksheet": {
+                            "mode": "chose",
+                            "label": "Table1",
+                            "nested": [
+                                {
+                                    "name": "table",
+                                    "type": "select",
+                                    "label": "Table",
+                                    "options": {
+                                        "store": "rpc://microsoft-excel/2/listTables",
+                                        "nested": "rpc://microsoft-excel/2/listTableRowFields?required=true"
+                                    },
+                                    "required": true
+                                }
+                            ]
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "azure"
+                            },
+                            "label": "My Microsoft connection"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:azure",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "select",
+                        "type": "select",
+                        "label": "Select a method",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "map",
+                                "list"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "selectB",
+                        "type": "select",
+                        "label": "Choose your OneDrive location",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "my",
+                                "site",
+                                "group"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "workbook",
+                        "type": "file",
+                        "label": "Workbook",
+                        "required": true
+                    },
+                    {
+                        "name": "worksheet",
+                        "type": "select",
+                        "label": "Worksheet",
+                        "required": true
+                    },
+                    {
+                        "name": "table",
+                        "type": "select",
+                        "label": "Table",
+                        "required": true
+                    },
+                    {
+                        "name": "row",
+                        "spec": [
+                            {
+                                "name": "0",
+                                "type": "text",
+                                "label": "Timestamp"
+                            },
+                            {
+                                "name": "1",
+                                "type": "text",
+                                "label": "CustomerName"
+                            },
+                            {
+                                "name": "2",
+                                "type": "text",
+                                "label": "OrderNumber"
+                            },
+                            {
+                                "name": "3",
+                                "type": "text",
+                                "label": "TrackingNumber"
+                            },
+                            {
+                                "name": "4",
+                                "type": "text",
+                                "label": "IssueType"
+                            },
+                            {
+                                "name": "5",
+                                "type": "text",
+                                "label": "RequestedAction"
+                            },
+                            {
+                                "name": "6",
+                                "type": "text",
+                                "label": "UrgencyLevel"
+                            },
+                            {
+                                "name": "7",
+                                "type": "text",
+                                "label": "CustomerSince"
+                            },
+                            {
+                                "name": "8",
+                                "type": "text",
+                                "label": "ProductMentioned"
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Row",
+                        "required": true
+                    },
+                    {
+                        "name": "id",
+                        "type": "uinteger",
+                        "label": "Row ID"
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "@odata.id",
+                        "type": "text",
+                        "label": "@Odata ID"
+                    },
+                    {
+                        "name": "index",
+                        "type": "text",
+                        "label": "Table Row ID"
+                    },
+                    {
+                        "name": "values",
+                        "spec": [
+                            {
+                                "name": "0",
+                                "type": "text",
+                                "label": "Timestamp"
+                            },
+                            {
+                                "name": "1",
+                                "type": "text",
+                                "label": "CustomerName"
+                            },
+                            {
+                                "name": "2",
+                                "type": "text",
+                                "label": "OrderNumber"
+                            },
+                            {
+                                "name": "3",
+                                "type": "text",
+                                "label": "TrackingNumber"
+                            },
+                            {
+                                "name": "4",
+                                "type": "text",
+                                "label": "IssueType"
+                            },
+                            {
+                                "name": "5",
+                                "type": "text",
+                                "label": "RequestedAction"
+                            },
+                            {
+                                "name": "6",
+                                "type": "text",
+                                "label": "UrgencyLevel"
+                            },
+                            {
+                                "name": "7",
+                                "type": "text",
+                                "label": "CustomerSince"
+                            },
+                            {
+                                "name": "8",
+                                "type": "text",
+                                "label": "ProductMentioned"
+                            },
+                            {
+                                "name": "9",
+                                "type": "text",
+                                "label": "Column1"
+                            },
+                            {
+                                "name": "10",
+                                "type": "text",
+                                "label": "Column2"
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Row"
+                    }
+                ]
+            }
+        }
+    ],
+    "metadata": {
+        "instant": false,
+        "version": 1,
+        "scenario": {
+            "roundtrips": 1,
+            "maxErrors": 3,
+            "autoCommit": true,
+            "autoCommitTriggerLast": true,
+            "sequential": false,
+            "slots": null,
+            "confidential": false,
+            "dataloss": false,
+            "dlq": false,
+            "freshVariables": false
+        },
+        "designer": {
+            "orphans": []
+        },
+        "zone": "eu1.make.com",
+        "notes": []
+    }
+}
