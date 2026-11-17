@@ -1,6 +1,6 @@
 # Support Email Analysis Engine (output: Excel)
 
-A [Make.com](https://www.make.com) scenario that reads incoming customer support emails, uses a Mistral AI agent to extract the key information (customer, order, issue type, urgency, requested action...), and logs each email as a row in an Excel table.
+A scenario that reads incoming customer support emails, uses a Mistral AI agent to extract the key information (customer, order, issue type, urgency, requested action...), and logs each email as a row in an Excel table.
 
 Other versions of this scenario:
 - [Support-email-analysis-engine-output-Google-Sheets](https://github.com/phillarr/Support-email-analysis-engine-output-Google-Sheets)
